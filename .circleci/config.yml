@@ -68,18 +68,10 @@ jobs:
       # Perform a native Quarkus build and verify
       # ########################
       - run:
-          filters:
-            branches:
-              only:
-                - master
-                    name: Build (Native)
-                    command: ./mvnw clean package -Pnative -DskipTests -Dmaven.test.skip=true -Dquarkus.native.container-build=true
-                    no_output_timeout: 30m
+          name: Build (Native)
+          command: ./mvnw clean package -Pnative -DskipTests -Dmaven.test.skip=true -Dquarkus.native.container-build=true
+          no_output_timeout: 30m
       - run:
-          filters:
-            branches:
-              only:
-                - master
-                    name: Verify (Native)
-                    command: ./mvnw verify -Pnative -Dquarkus.native.container-build=true
-                    no_output_timeout: 30m
+          name: Verify (Native)
+          command: ./mvnw verify -Pnative -Dquarkus.native.container-build=true
+          no_output_timeout: 30m
