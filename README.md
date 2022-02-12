@@ -17,7 +17,7 @@ You can run your application in dev mode that enables live coding using:
 
 For Tests to run you will need a local Dynamo DB setup
 ```shell script
-docker run --publish 8000:8000 amazon/dynamodb-local:1.11.477 -jar DynamoDBLocal.jar -inMemory -sharedDb
+docker run --publish 8000:8000 amazon/dynamodb-local:1.13.2 -jar DynamoDBLocal.jar -inMemory -sharedDb
 ```
 
 The application can be packaged using:
