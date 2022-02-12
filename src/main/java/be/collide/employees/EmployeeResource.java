@@ -1,5 +1,7 @@
 package be.collide.employees;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
@@ -10,6 +12,7 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/employees")
+@Slf4j
 public class EmployeeResource {
     @Inject
     Employees employees;
@@ -27,6 +30,7 @@ public class EmployeeResource {
 
     @POST
     public Response add(Employee employee, @Context UriInfo uriInfo) {
+        log.debug("Adding employee" + employee);
         employee.setId(UUID.randomUUID().toString());
         employees.add(employee);
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
