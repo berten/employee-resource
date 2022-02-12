@@ -24,7 +24,9 @@ public class EmployeeResourceTest {
     }
 
     @Test
-    public void addAndRemove() {
+    public void addAndRemove() throws InterruptedException {
+        Thread.sleep(15000);
+
 
         String url = given()
                 .log().uri()
