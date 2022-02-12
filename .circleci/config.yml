@@ -7,7 +7,7 @@ jobs:
   build:
     # Use "machine" instead of e.g. "docker" for better/faster results
     machine:
-      image: ubuntu-1604:202007-01
+      image: ubuntu-2004:202008-01
 
     # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
     resource_class: medium
