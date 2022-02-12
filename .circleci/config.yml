@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     # Use "machine" instead of e.g. "docker" for better/faster results
-    machine:
+    machine: true
       image: ubuntu-2004:202008-01
 
 
@@ -52,8 +52,8 @@ jobs:
             curl -k -L -o dynamodb-local.tgz http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz
             tar -xzf dynamodb-local.tgz
             java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &
-
-          
+      
+      
 
       # Standard maven build and test phases - does not perform a native build (or verify)
       # ########################
