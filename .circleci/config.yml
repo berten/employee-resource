@@ -9,6 +9,7 @@ jobs:
     machine:
       image: ubuntu-2004:202008-01
 
+
     # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
     resource_class: medium
     working_directory: ~/repo
@@ -31,7 +32,7 @@ jobs:
             - v1-dependencies-
 
       - run:
-          name: Download Dependencies
+          name: Show Maven Version
           command: mvn --version
 
       # Download maven dependencies so that we can cache them
@@ -50,7 +51,7 @@ jobs:
           command: |
             curl -k -L -o dynamodb-local.tgz http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz
             tar -xzf dynamodb-local.tgz
-            java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+            java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &
 
           
 
