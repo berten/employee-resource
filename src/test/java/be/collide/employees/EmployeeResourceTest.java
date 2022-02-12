@@ -27,10 +27,11 @@ public class EmployeeResourceTest {
     public void addAndRemove() {
 
         String url = given()
+                .log().uri()
                 .contentType("application/json")
                 .body(this.employee)
                 .when().post("/employees")
-                .then()
+                .then().log().all()
                 .statusCode(201)
                 .extract().headers().get("Location").getValue();
 
