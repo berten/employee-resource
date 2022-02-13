@@ -2,12 +2,15 @@ package be.collide.employees;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.ValidatableResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.*;
+
+import javax.inject.Inject;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,18 +18,35 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class EmployeeResourceTest {
 
     private Employee employee;
+    @Inject
+    DynamoDbClient dynamoDB;
+
 
     @BeforeEach
     void setUp() {
+        dynamoDB.createTable(CreateTableRequest.builder()
+                .tableName("Employees")
+                .keySchema(KeySchemaElement.builder()
+                        .attributeName("id").keyType(KeyType.HASH).build())
+                .attributeDefinitions(AttributeDefinition.builder()
+                        .attributeName("id").attributeType("S")
+                        .build())
+                .provisionedThroughput(ProvisionedThroughput.builder()
+                        .readCapacityUnits(10L)
+                        .writeCapacityUnits(10L).build())
+                .build());
         employee = new Employee();
         employee.setName("Berten De Schutter");
         employee.setCompany("Collide");
     }
 
+    @AfterEach
+    void tearDown() {
+        dynamoDB.deleteTable(DeleteTableRequest.builder().tableName("Employees").build());
+    }
+
     @Test
     public void addAndRemove() throws InterruptedException {
-        Thread.sleep(15000);
-
 
         String url = given()
                 .log().uri()
