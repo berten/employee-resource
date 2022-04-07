@@ -1,40 +1,45 @@
 package be.collide.employees;
 
+
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.*;
 
-import javax.inject.Inject;
+import java.net.URI;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+
 @QuarkusTest
 public class EmployeeResourceTest {
 
     private Employee employee;
-    @Inject
-    DynamoDbClient dynamoDB;
 
 
     @BeforeEach
     void setUp() {
-        dynamoDB.createTable(CreateTableRequest.builder()
+
+        var client =
+                DynamoDbClient.builder()
+                        .region(Region.of("eu-central-1"))
+                        .endpointOverride(URI.create("http://localhost:8000"))
+                        .build();
+
+        client.createTable(CreateTableRequest.builder()
+                .provisionedThroughput(ProvisionedThroughput.builder().writeCapacityUnits(10L).readCapacityUnits(10L).build())
+                .attributeDefinitions(List.of(AttributeDefinition.builder().attributeName("id").attributeType(ScalarAttributeType.S).build()))
                 .tableName("Employees")
-                .keySchema(KeySchemaElement.builder()
-                        .attributeName("id").keyType(KeyType.HASH).build())
-                .attributeDefinitions(AttributeDefinition.builder()
-                        .attributeName("id").attributeType("S")
-                        .build())
-                .provisionedThroughput(ProvisionedThroughput.builder()
-                        .readCapacityUnits(10L)
-                        .writeCapacityUnits(10L).build())
+                .keySchema(KeySchemaElement.builder().keyType(KeyType.HASH).attributeName("id").build())
                 .build());
+
         employee = new Employee();
         employee.setName("Berten De Schutter");
         employee.setCompany("Collide");
@@ -42,7 +47,13 @@ public class EmployeeResourceTest {
 
     @AfterEach
     void tearDown() {
-        dynamoDB.deleteTable(DeleteTableRequest.builder().tableName("Employees").build());
+        var client =
+                DynamoDbClient.builder()
+                        .region(Region.of("eu-central-1"))
+                        .endpointOverride(URI.create("http://localhost:8000"))
+                        .build();
+
+        client.deleteTable(DeleteTableRequest.builder().tableName("Employees").build());
     }
 
     @Test

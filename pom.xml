@@ -33,6 +33,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -66,11 +67,8 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>url-connection-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
-        </dependency>
+
+
 
         <!-- Test Specific Dependencies -->
         <dependency>
@@ -83,6 +81,7 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <build>
         <plugins>
